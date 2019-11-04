@@ -122,6 +122,7 @@ class KDDocumentResourceManager {
                 // add each script in its own <script> tag, avoid duplicating
                 Object.keys(scripts).forEach(id => {
                     if (!document.getElementById(id)) _local.addScript(scripts[id], id)
+                    if (!_params.scripts[id]) _params.scripts[id] = scripts[id]
                 })
 
             },
@@ -166,6 +167,7 @@ class KDDocumentResourceManager {
                 // add each script in its own <script> tag, avoid duplicating
                 Object.keys(css).forEach(id => {
                     if (!document.getElementById(id)) _local.addLink(css[id], id)
+                    if (!_params.stylesheets[id]) _params.stylesheets[id] = css[id]
                 })
 
             },
@@ -238,6 +240,11 @@ class KDDocumentResourceManager {
 
             },
 
+            onReady: callback => {
+                _params.callback = callback
+                _private.readyCheckAndCallback()
+            },
+
         }
 
         const _private = {
@@ -260,9 +267,10 @@ class KDDocumentResourceManager {
         const _api = {
             addExternalScripts: scripts => _public.addExternalScripts(scripts),
             addExternalCSS: css => _public.addExternalCSS(css),
-            addLocalStyles: (styles, styleTagID) => _public.addLocalStyles(styles, styleTagID),
+            addLocalStyles: styles => _public.addLocalStyles(styles),
             params: _ => _params,
             state: _ => _state,
+            onReady: callback => _public.onReady(callback),
         }
 
         const init = (_ => {

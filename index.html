@@ -1,0 +1,61 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title></title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
+
+</head>
+
+<body>
+    <script src="KDDocumentResourceManager.js"></script>
+
+    <script>
+        const params = {
+            scripts: {
+                tonejs: 'https://cdnjs.cloudflare.com/ajax/libs/tone/14.3.32/Tone.js',
+                nexusui: 'https://cdn.jsdelivr.net/npm/nexusui@2.0.10/dist/NexusUI.min.js',
+            },
+
+            stylesheets: {
+                animateCSS: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css',
+            },
+
+            styles: {
+                tagIdentifier: 'exampleStyles',
+                classes: {
+                    'outer-container': {
+                        'height': '100%',
+                        'width': '180px',
+                    },
+                    'black-button': {
+                        'background-color': '#000',
+                        'border': '1px',
+                    },
+                },
+                ids: {
+                    'submit-form-button': {
+                        'color': '#fefefe',
+                        'text-align': 'center',
+                    },
+                },
+            },
+
+        }
+
+        const manager = new KDDocumentResourceManager(params, _ => {
+            console.log('all resources loaded')
+            // Check that a remote resource is actually available.
+            console.log(Tone)
+        })
+    </script>
+
+</body>
+
+</html>

@@ -16,6 +16,7 @@ via CDN:
 Create a `KDDocumentResourceManagerParameters` JSON and `new KDDocumentResourceManager`.
 ```
 const params = {
+ 
     scripts: {
         tonejs: 'https://cdnjs.cloudflare.com/ajax/libs/tone/14.3.32/Tone.js',
         nexusui: 'https://cdn.jsdelivr.net/npm/nexusui@2.0.10/dist/NexusUI.min.js',
@@ -26,25 +27,26 @@ const params = {
     },
 
     styles: {
-        tagIdentifier: 'exampleStyles',
-        classes: {
-            'outer-container': {
-                'height': '100%',
-                'width': '180px',
-            },
-            'black-button': {
-                'background-color': '#000',
-                'border': '1px',
-            },
+        '.outer-container': {
+            'height': '500px',
+            'width': '500px',
+            'background-color': '#000',
         },
-        ids: {
-            'submit-form-button': {
-                'color': '#fefefe',
-                'text-align': 'center',
+        '.black-button': {
+            'background-color': '#000',
+            'border': '1px',
+        },
+        '#submit-form-button': {
+            'color': '#fefefe',
+            'text-align': 'center',
+        },
+        '@media only screen and (max-width: 600px)': {
+            '.outer-container': {
+                'height': '100px',
+                'width': '100px',
             },
         },
     },
-
 }
 
 const manager = new KDDocumentResourceManager(params, _ => {
@@ -55,7 +57,7 @@ const manager = new KDDocumentResourceManager(params, _ => {
 ```
 
 ## KDDocumentResourceManagerParameters
-The parameter object consists of options `scripts`, `stylesheets`, and `styles` properties. `scripts` and `stylesheets` should be a URL appropriately pointing to a `.js` or `.css` file. A `styles` object consists of `tagIdentifier`, `classes`, and `ids` properties. `classes` and `ids` should have an object for each class or id, and each should consist of CSS style names as keys with the CSS value as the value. `tagIdentifier` is the DOM identifier that will be assigned to the `<style>` tag and used to avoid accidentally duplicating existing resources. See `const params` in the example above.
+The parameter object consists of options `scripts`, `stylesheets`, and `styles` properties. `scripts` and `stylesheets` should be a URL appropriately pointing to a `.js` or `.css` file. A `styles` object consists of CSS style names as keys with the CSS value as the value. Can include `@media` properties which are themselves objects containing styles. See `const params` in the example above.
 
 ## API
 ```

@@ -1,17 +1,9 @@
 /**
- * JSON syntax for `KDDocumentResourceManager.addLocalStyles(styles)` parameter.
- * @typedef {object} KDDocumentResourceManagerStyles
- * @property {string=} tagIdentifier - DOM identifier for the `<style>` tag.
- * @property {object=} classes - Object containing classes and styles.
- * @property {object=} ids - Object containing ids and styles.
- */
-
-/**
  * JSON syntax for `KDDocumentResourceManager` parameters object.
  * @typedef {object} KDDocumentResourceManagerParameters
  * @property {object=} scripts - Object with keys representing DOM identifiers and values which are URLs to javascript resources.
  * @property {object=} stylesheets - Object with keys representing DOM identifiers and values which are URLs to CSS resources.
- * @property {KDDocumentResourceManagerStyles=} styles - Object with keys for class and id names whose values are objects of CSS attributes and values.
+ * @property {object=} styles - Object with keys for class and id names whose values are objects of CSS attributes and values. Can include @media properties which are themselves objects containing styles.
  */
 
 /**
@@ -29,21 +21,23 @@
  *      },
  * 
  *      styles: {
- *          tagIdentifier: 'exampleStyles',
- *          classes: {
- *              'outer-container': {
- *                  'height': '100%',
- *                  'width': '180px',
- *              },
- *              'black-button': {
- *                  'background-color': '#000',
- *                  'border': '1px',
- *              },
+ *          '.outer-container': {
+ *              'height': '500px',
+ *              'width': '500px',
+ *              'background-color': '#000',
  *          },
- *          ids: {
- *              'submit-form-button': {
- *                  'color': '#fefefe',
- *                  'text-align': 'center',
+ *          '.black-button': {
+ *              'background-color': '#000',
+ *              'border': '1px',
+ *          },
+ *          '#submit-form-button': {
+ *              'color': '#fefefe',
+ *              'text-align': 'center',
+ *          },
+ *          '@media only screen and (max-width: 600px)': {
+ *              '.outer-container': {
+ *                  'height': '100px',
+ *                  'width': '100px',
  *              },
  *          },
  *      },
@@ -178,22 +172,17 @@ class KDDocumentResourceManager {
              * @example
              * 
              *      const styles = {
-             *          tagIdentifier: 'exampleStyles',
-             *          classes: {
-             *              'outer-container': {
-             *                  'height': '100%',
-             *                  'width': '180px',
-             *              },
-             *              'black-button': {
-             *                  'background-color': '#000',
-             *                  'border': '1px',
-             *              },
+             *          '.outer-container': {
+             *              'height': '100%',
+             *              'width': '180px',
              *          },
-             *          ids: {
-             *              'submit-form-button': {
-             *                  'color': '#fefefe',
-             *                  'text-align': 'center',
-             *              },
+             *          '.black-button': {
+             *              'background-color': '#000',
+             *              'border': '1px',
+             *          },
+             *          '#submit-form-button': {
+             *              'color': '#fefefe',
+             *              'text-align': 'center',
              *          },
              *      }
              * 
@@ -202,10 +191,8 @@ class KDDocumentResourceManager {
              * 
              */
             addLocalStyles: styles => {
-
                 const _local = {
-                    classes: styles.classes ? styles.classes : null,
-                    ids: styles.ids ? styles.ids : null,
+                    styles: styles.styles ? styles.styles : null,
                     // hold complete strings for each CSS class.
                     cssStrings: {},
                     // hold complete style string with tags and css
@@ -219,24 +206,34 @@ class KDDocumentResourceManager {
                         return string
                     },
                     // Add the <style> tag and classes to the document header.
-                    addStyles: id => {
+                    addStyles: _ => {
                         const style = document.createElement('style')
-                        if (id) style.id = id
+                        style.id = 'KDDocumentResourceManager--Styles'
                         style.appendChild(document.createTextNode(_local.css))
                         document.head.appendChild(style)
                     },
                 }
 
-                // create class and id strings
-                if (_local.classes) Object.keys(_local.classes).forEach(className => _local.cssStrings[className] = ' .' + className + _local.createStyleString(_local.classes[className]))
-                if (_local.ids) Object.keys(_local.ids).forEach(idName => _local.cssStrings[idName] = ' #' + idName + _local.createStyleString(_local.ids[idName]))
+                // loop through styles and create keyed strings of each class - handle classes embedded in @media
+                if (_local.styles) {
+                    Object.keys(_local.styles).forEach(name => {
+                        const check = Object.values(_local.styles[name])
+                        // Handle normal classes or sections (such as @media)
+                        if (typeof check[0] === 'string') {
+                            _local.cssStrings[name] = name + _local.createStyleString(_local.styles[name])
+                        } else if (typeof check[0] === 'object') {
+                            _local.cssStrings[name] = name + ' {'
+                            Object.keys(_local.styles[name]).forEach(subName => _local.cssStrings[name] += subName + _local.createStyleString(_local.styles[name][subName]))
+                            _local.cssStrings[name] += '}'
+                        }
+                    })
+                }
 
                 // create complete css content
                 Object.values(_local.cssStrings).forEach(style => _local.css += style)
 
                 // add style tag and content to document head - do not duplicate if a style id tag is available
-                if (styles.tagIdentifier && !document.getElementById(styles.tagIdentifier)) _local.addStyles(styles.tagIdentifier)
-                else _local.addStyles()
+                _local.addStyles()
 
             },
 

@@ -14,7 +14,11 @@
 </head>
 
 <body>
+
+    <div class="outer-container"></div>
+
     <script src="https://cdn.jsdelivr.net/gh/justKD/KDDocumentResourceManager@master/KDDocumentResourceManager.min.js"></script>
+    <!-- <script src="KDDocumentResourceManager.js"></script> -->
 
     <script>
         const params = {
@@ -28,21 +32,26 @@
             },
 
             styles: {
-                tagIdentifier: 'exampleStyles',
-                classes: {
-                    'outer-container': {
-                        'height': '100%',
-                        'width': '180px',
+                identifier: 'exampleStyles',
+                styles: {
+                    '.outer-container': {
+                        'height': '500px',
+                        'width': '500px',
+                        'background-color': '#000',
                     },
-                    'black-button': {
+                    '.black-button': {
                         'background-color': '#000',
                         'border': '1px',
                     },
-                },
-                ids: {
-                    'submit-form-button': {
+                    '#submit-form-button': {
                         'color': '#fefefe',
                         'text-align': 'center',
+                    },
+                    '@media only screen and (max-width: 600px)': {
+                        '.outer-container': {
+                            'height': '100px',
+                            'width': '100px',
+                        },
                     },
                 },
             },

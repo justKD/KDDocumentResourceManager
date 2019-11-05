@@ -57,7 +57,7 @@ const manager = new KDDocumentResourceManager(params, _ => {
 ```
 
 ## KDDocumentResourceManagerParameters
-The parameter object consists of options `scripts`, `stylesheets`, and `styles` properties. `scripts` and `stylesheets` should be a URL appropriately pointing to a `.js` or `.css` file. A `styles` object consists of CSS style names as keys with the CSS value as the value. Can include `@media` properties which are themselves objects containing styles. See `const params` in the example above.
+The parameter object consists of optional `scripts`, `stylesheets`, and `styles` properties. `scripts` and `stylesheets` should include URLs appropriately pointing to `.js` or `.css` files. A `styles` object consists of CSS style names as keys with the CSS value as the value. Can include `@media` properties which are themselves objects containing styles. See `const params` in the example above.
 
 ## API
 ```

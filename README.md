@@ -11,9 +11,18 @@ via CDN:
 ```
 <script src="https://cdn.jsdelivr.net/gh/justKD/KDDocumentResourceManager@master/KDDocumentResourceManager.min.js"></script>
 ```
-
 ## Basic Use
-Create a `KDDocumentResourceManagerParameters` JSON and `new KDDocumentResourceManager`.
+```
+const manager = new KDDocumentResourceManager({
+    scripts: {
+        jquery: 'https://code.jquery.com/jquery-3.4.1.min.js',
+    },
+}, _ => {
+    console.log( $(body) )
+})
+```
+
+## Extended Use
 ```
 const params = {
  
